@@ -8,6 +8,10 @@ export function authRequired(req, res, next) {
     req.user = { id: p.id, email: p.email };
     next();
   } catch (e) {
-    return res.status(401).json({ error: "Invalid token" });
+    // Only handle JWT errors, let other exceptions propagate
+    if (e.name === "JsonWebTokenError" || e.name === "TokenExpiredError") {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+    throw e;
   }
 }

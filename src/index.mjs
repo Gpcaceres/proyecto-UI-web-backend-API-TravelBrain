@@ -15,10 +15,12 @@ app.set("json spaces", 2);
 const PORT = process.env.PORT || 8080;
 const URI =
   process.env.MONGODB_URI || "mongodb://localhost:27017/travelplanner";
-mongoose
-  .connect(URI)
-  .then(() => console.log("MongoDB conectado"))
-  .catch((e) => console.error("MongoDB error", e.message));
+try {
+  await mongoose.connect(URI);
+  console.log("MongoDB conectado");
+} catch (e) {
+  console.error("MongoDB error", e.message);
+}
 app.get("/health", (req, res) =>
   res.json({ ok: true, service: "travel-planner-api" })
 );
